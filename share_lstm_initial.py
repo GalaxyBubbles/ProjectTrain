@@ -1,3 +1,5 @@
+#基本的lstm预测股价实现（只包含一层lstm网络和一层全连接层）
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
