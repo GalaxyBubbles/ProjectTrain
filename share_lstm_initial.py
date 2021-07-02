@@ -23,7 +23,6 @@ end_dt = time_temp.strftime('%Y%m%d')
 
 #准备训练集数据
 
-#这里是用 000001 平安银行为例，下载从 2015-1-1 到最近某一天的股价数据
 df = ts.pro_bar(ts_code='603912.SH', start_date='20200731', end_date='20201228', freq='D')
 df.head() #用 df.head() 可以查看一下下载下来的股票价格数据，显示数据如下：
 
@@ -44,29 +43,6 @@ print(training_set_scaled.shape)
 
 plt.figure()
 plt.plot(training_set_scaled,"r-")
-
-#小波去噪处理
-
-# training_set_scaled=training_set_scaled.reshape(-1)
-
-# w = pywt.Wavelet('db8')  # 选用Daubechies8小波
-# maxlev = pywt.dwt_max_level(len(training_set_scaled), w.dec_len)
-# threshold = 0.04  # Threshold for filtering
-
-# coeffs = pywt.wavedec(training_set_scaled, 'db8', level=maxlev)  # 将信号进行小波分解
-# print(coeffs[0].shape)
-# print(len(coeffs))
-# for i in range(1, len(coeffs)):
-#     coeffs[i] = pywt.threshold(coeffs[i], threshold*max(coeffs[i]))  # 将噪声滤波
-
-# training_set_scaled = pywt.waverec(coeffs, 'db8')  # 将信号进行小波重构
-
-# plt.plot(training_set_scaled,"b--")
-
-# training_set_scaled=np.array(training_set_scaled)
-# training_set_scaled=training_set_scaled.reshape(-1,1)
-# print(training_set_scaled.shape)
-
 
 # print(training_set_scaled)
 #准备 X 和 y 数据，就类似前面解释的，先用最近一个交易日的收盘价作为第一个 y，然后这个交易日以前的 60 个交易日的收盘价作为 X。
@@ -197,15 +173,7 @@ for i in range(epochs):
         train = Variable(shares, requires_grad=True)
         labels = Variable(labels, requires_grad=True)
         outputs= model(train)
-#         labels=labels.reshape(bs)
-#         outputs=outputs.reshape(10)
-#         print("input:",outputs.shape)
-#         print("target:",labels.shape)
-#         print("outputs:",outputs)
-#         print("labels:",labels)
-#         loss = error(outputs, labels.long())
-        
-#         outputs = torch.autograd.Variable(outputs)
+
         loss_mse = loss_MSE(outputs.float(), labels.float())
         loss_rmse = torch.sqrt(loss_mse)
         loss_mae = loss_MAE(outputs.float(), labels.float())
